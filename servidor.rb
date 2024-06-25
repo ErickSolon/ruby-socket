@@ -9,12 +9,13 @@ Socket.open(:INET, :STREAM) do |sc|
 
   while true
 
-    cliente_conexao, _ = sc.accept
+    cliente_conexao, = sc.accept
 
     Thread.new(cliente_conexao) do |th|
-      puts th.recv(1024) while true
-      th.close
-      cliente_conexao.close
+      while true
+        puts th.recv(1024)
+        File.open('./log.txt', 'a') { |escrever| escrever.write(th.recv(1024) + "\n") }
+      end
     end
 
   end
